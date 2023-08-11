@@ -67,7 +67,7 @@ public class BookDAO {
                 .stream().findAny();
     }
 
-    // Освбождает книгу (этот метод вызывается, когда человек возвращает книгу в библиотеку)
+    // Освобождает книгу (этот метод вызывается, когда человек возвращает книгу в библиотеку)
     public void release(int id) {
         jdbcTemplate.update(
                 "UPDATE Book SET person_id=NULL WHERE id=?",

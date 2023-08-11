@@ -1,19 +1,33 @@
 package my.libraryservice.models;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
+@Entity
+@Table(name = "book")
 public class Book {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "title")
     @Size(min = 2, max = 100, message = "Название книги должно быть от 2 до 100 символов длиной")
     private String title;
 
+    @Column(name = "author")
     @Size(min = 2, max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
     private String author;
 
+    @Column(name = "year")
     @Min(value = 1000, message = "Год должен быть больше, чем 1000")
     private int year;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person personId;
 
     public Book() {
     }
@@ -54,5 +68,13 @@ public class Book {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public Person getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(Person personId) {
+        this.personId = personId;
     }
 }
