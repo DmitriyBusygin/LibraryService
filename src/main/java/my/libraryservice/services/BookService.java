@@ -3,6 +3,8 @@ package my.libraryservice.services;
 import my.libraryservice.models.Book;
 import my.libraryservice.models.Person;
 import my.libraryservice.repository.BookRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,12 @@ public class BookService {
     @Transactional(readOnly = true)
     public List<Book> findAll() {
         return bookRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Book> findWithPagination(Integer page, Integer booksPerPage) {
+        Pageable pageable = PageRequest.of(page, booksPerPage);
+        return bookRepository.findAll(pageable).getContent();
     }
 
     @Transactional(readOnly = true)

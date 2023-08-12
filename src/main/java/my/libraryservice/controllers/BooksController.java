@@ -28,8 +28,15 @@ public class BooksController {
     }
 
     @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("books", bookService.findAll());
+    public String index(Model model,
+                        @RequestParam(value = "page", required = false) Integer page,
+                        @RequestParam(value = "books_per_page", required = false) Integer booksPerPage) {
+        if (page == null || booksPerPage == null)
+            // выдача всех книг
+            model.addAttribute("books", bookService.findAll());
+        else
+            model.addAttribute("books", bookService.findWithPagination(page, booksPerPage));
+
         return "books/index";
     }
 
