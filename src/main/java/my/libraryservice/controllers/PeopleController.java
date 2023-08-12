@@ -22,8 +22,15 @@ public class PeopleController {
     }
 
     @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("people", peopleService.findAll());
+    public String index(Model model,
+                        @RequestParam(value = "page", required = false) Integer page,
+                        @RequestParam(value = "people_per_page", required = false) Integer peoplePerPage) {
+        if (page == null || peoplePerPage == null) {
+            model.addAttribute("people", peopleService.findAll());
+        } else {
+            model.addAttribute("people", peopleService.findWithPagination(page, peoplePerPage));
+        }
+
         return "people/index";
     }
 
