@@ -38,6 +38,14 @@ public class Book {
         this.year = year;
     }
 
+    public Book(int id, String title, String author, int year, Person personId) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.year = year;
+        this.personId = personId;
+    }
+
     public int getId() {
         return id;
     }

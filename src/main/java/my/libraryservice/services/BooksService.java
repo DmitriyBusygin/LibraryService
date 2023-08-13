@@ -60,6 +60,10 @@ public class BooksService {
         booksRepository.deleteById(id);
     }
 
+    public List<Book> searchByTitle(String query) {
+        return booksRepository.findByTitleStartingWith(query);
+    }
+
     // Освобождает книгу (этот метод вызывается, когда человек возвращает книгу в библиотеку)
     public void release(int bookId) {
         booksRepository.findById(bookId).ifPresent(
