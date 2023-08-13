@@ -3,12 +3,14 @@ package my.libraryservice.services;
 import my.libraryservice.models.Book;
 import my.libraryservice.models.Person;
 import my.libraryservice.repository.PeopleRepository;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +58,18 @@ public class PeopleService {
         Optional<Person> person = peopleRepository.findById(id);
 
         if (person.isPresent()) {
+            Hibernate.initialize(person.get().getBooks());
+            // Мы внизу итерируемся по книгам, поэтому они точно будут загружены, но на всякий случай
+            // не мешает всегда вызывать Hibernate.initialize()
+            // (на случай, например, если код в дальнейшем поменяется и итерация по книгам удалится)
+
+            // Проверка просроченности книг
+            person.get().getBooks().forEach(book -> {
+                long diffInMillies = Math.abs(book.getTakenAt().getTime() - new Date().getTime());
+                // 864000000 милисекунд = 10 суток
+                if (diffInMillies > 864000000)
+                    book.setExpired(true); // книга просрочена
+            });
             return person.get().getBooks();
         } else {
             return Collections.emptyList();

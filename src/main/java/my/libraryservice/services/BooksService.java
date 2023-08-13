@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,14 +68,20 @@ public class BooksService {
     // Освобождает книгу (этот метод вызывается, когда человек возвращает книгу в библиотеку)
     public void release(int bookId) {
         booksRepository.findById(bookId).ifPresent(
-                book -> book.setPersonId(null)
+                book -> {
+                    book.setPersonId(null);
+                    book.setTakenAt(null);
+                }
         );
     }
 
     // Назначает книгу человеку (этот метод вызывается, когда человек забирает книгу из библиотеки)
     public void assign(int bookId, Person selectedPerson) {
         booksRepository.findById(bookId).ifPresent(
-                book -> book.setPersonId(selectedPerson)
+                book -> {
+                    book.setPersonId(selectedPerson);
+                    book.setTakenAt(new Date());
+                }
         );
     }
 

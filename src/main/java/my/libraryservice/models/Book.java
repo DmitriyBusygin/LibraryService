@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "book")
 public class Book {
@@ -29,21 +31,14 @@ public class Book {
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person personId;
 
+    @Column(name = "taken_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date takenAt;
+
+    @Transient
+    private boolean expired; // Hibernate не будет замечать этого поля
+
     public Book() {
-    }
-
-    public Book(String title, String author, int year) {
-        this.title = title;
-        this.author = author;
-        this.year = year;
-    }
-
-    public Book(int id, String title, String author, int year, Person personId) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.year = year;
-        this.personId = personId;
     }
 
     public int getId() {
@@ -84,5 +79,21 @@ public class Book {
 
     public void setPersonId(Person personId) {
         this.personId = personId;
+    }
+
+    public Date getTakenAt() {
+        return takenAt;
+    }
+
+    public void setTakenAt(Date takenAt) {
+        this.takenAt = takenAt;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }
